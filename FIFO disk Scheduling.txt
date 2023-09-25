@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int main() {
+    int n; // Number of disk requests
+    cout << "Enter the number of disk requests: ";
+    cin >> n;
+
+    vector<int> requests(n); // Array to store disk requests
+    cout << "Enter the disk request queue:" << endl;
+    for (int i = 0; i < n; i++) {
+        cin >> requests[i];
+    }
+
+    int head; // Initial position of the disk head
+    cout << "Enter the initial position of the disk head: ";
+    cin >> head;
+
+    // Perform FIFO disk scheduling
+    queue<int> fifoQueue;
+    for (int i = 0; i < n; i++) {
+        fifoQueue.push(requests[i]);
+    }
+
+    int totalMovement = 0;
+
+    cout << "Sequence of disk head movement:" << endl;
+    while (!fifoQueue.empty()) {
+        int nextRequest = fifoQueue.front();
+        fifoQueue.pop();
+
+        // Calculate the absolute distance to the next request
+        int distance = abs(head - nextRequest);
+        totalMovement += distance;
+
+        cout << "Move from " << head << " to " << nextRequest << " (Distance: " << distance << ")" << endl;
+
+        // Set the disk head position to the next request
+        head = nextRequest;
+    }
+
+    cout << "Total head movement: " << totalMovement << endl;
+
+    return 0;
+}

@@ -1,0 +1,85 @@
+#include <iostream>
+#include <pthread.h>
+#include <semaphore.h>
+#include <unistd.h>
+
+using namespace std;
+
+const int READERS_COUNT = 5;
+const int WRITERS_COUNT = 3;
+
+sem_t mutex, wrt;
+int readers = 0;
+
+void* reader(void* arg) {
+    while (true) {
+        // Reader enters critical section
+        sem_wait(&mutex);
+        readers++;
+        if (readers == 1) {
+            sem_wait(&wrt);
+        }
+        sem_post(&mutex);
+
+        // Reading
+        cout << "Reader is reading." << endl;
+        usleep(1000000); // Simulate reading time
+
+        // Reader exits critical section
+        sem_wait(&mutex);
+        readers--;
+        if (readers == 0) {
+            sem_post(&wrt);
+        }
+        sem_post(&mutex);
+
+        usleep(1000000); // Sleep to simulate non-critical section
+    }
+}
+
+void* writer(void* arg) {
+    while (true) {
+        // Writer enters critical section
+        sem_wait(&wrt);
+
+        // Writing
+        cout << "Writer is writing." << endl;
+        usleep(2000000); // Simulate writing time
+
+        // Writer exits critical section
+        sem_post(&wrt);
+
+        usleep(2000000); // Sleep to simulate non-critical section
+    }
+}
+
+int main() {
+    pthread_t readerThreads[READERS_COUNT];
+    pthread_t writerThreads[WRITERS_COUNT];
+
+    // Initialize semaphores
+    sem_init(&mutex, 0, 1);
+    sem_init(&wrt, 0, 1);
+
+    // Create reader and writer threads
+    for (int i = 0; i < READERS_COUNT; i++) {
+        pthread_create(&readerThreads[i], NULL, reader, NULL);
+    }
+    for (int i = 0; i < WRITERS_COUNT; i++) {
+        pthread_create(&writerThreads[i], NULL, writer, NULL);
+    }
+
+    // Join threads
+    for (int i = 0; i < READERS_COUNT; i++) {
+        pthread_join(readerThreads[i], NULL);
+    }
+    for (int i = 0; i < WRITERS_COUNT; i++) {
+        pthread_join(writerThreads[i], NULL);
+    }
+
+    // Destroy semaphores
+    sem_destroy(&mutex);
+    sem_destroy(&wrt);
+
+    return 0;
+}
