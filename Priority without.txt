@@ -18,16 +18,15 @@ public class PriorityWithoutArrivalTime {
             priority[i] = sc.nextInt();
         }
 
-        // Sort processes based on priority (non-preemptive Priority)
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
                 if (priority[j] > priority[j + 1]) {
-                    // Swap priorities
+                    
                     int tempPriority = priority[j];
                     priority[j] = priority[j + 1];
                     priority[j + 1] = tempPriority;
 
-                    // Swap burst times
+                    
                     int tempBurst = burstTime[j];
                     burstTime[j] = burstTime[j + 1];
                     burstTime[j + 1] = tempBurst;
@@ -35,7 +34,6 @@ public class PriorityWithoutArrivalTime {
             }
         }
 
-        // Calculate waiting time and turnaround time
         int totalWaitingTime = 0;
         for (int i = 0; i < n; i++) {
             totalWaitingTime += burstTime[i];
@@ -43,7 +41,6 @@ public class PriorityWithoutArrivalTime {
             turnaroundTime[i] = totalWaitingTime;
         }
 
-        // Display results
         System.out.println("\nProcess\tBurst Time\tPriority\tWaiting Time\tTurnaround Time");
         for (int i = 0; i < n; i++) {
             System.out.println("P" + i + "\t" + burstTime[i] + "\t\t" + priority[i] + "\t\t" + waitingTime[i] + "\t\t" + turnaroundTime[i]);
