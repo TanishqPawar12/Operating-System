@@ -16,7 +16,6 @@ public class FCFSWithoutArrivalTime {
             burstTime[i] = sc.nextInt();
         }
         
-        // Calculate waiting time and turnaround time
         int totalWaitingTime = 0;
         for (int i = 0; i < n; i++) {
             totalWaitingTime += burstTime[i];
@@ -24,7 +23,6 @@ public class FCFSWithoutArrivalTime {
             turnaroundTime[i] = totalWaitingTime;
         }
         
-        // Display results
         System.out.println("\nProcess\tBurst Time\tWaiting Time\tTurnaround Time");
         for (int i = 0; i < n; i++) {
             System.out.println("P" + i + "\t" + burstTime[i] + "\t\t" + waitingTime[i] + "\t\t" + turnaroundTime[i]);
